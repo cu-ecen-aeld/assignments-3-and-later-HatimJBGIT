@@ -6,3 +6,6 @@ crosstool-ng
 aesd-build
 .vscode/
 test.sh.log
+actions-runner/
+#prevent Linux kernel & busybox repositiories from getting re-downloaded
+assignments/assignment3
