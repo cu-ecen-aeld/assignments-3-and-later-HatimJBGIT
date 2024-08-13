@@ -17,7 +17,10 @@ bool do_system(const char *cmd)
  *   or false() if it returned a failure
 */
 
-    return true;
+    if(-1 == system(cmd))
+        return false;
+    else
+        return true;
 }
 
 /**
@@ -40,6 +43,8 @@ bool do_exec(int count, ...)
     va_start(args, count);
     char * command[count+1];
     int i;
+    int status;
+    pid_t pid;
     for(i=0; i<count; i++)
     {
         command[i] = va_arg(args, char *);
@@ -47,7 +52,7 @@ bool do_exec(int count, ...)
     command[count] = NULL;
     // this line is to avoid a compile warning before your implementation is complete
     // and may be removed
-    command[count] = command[count];
+   // command[count] = command[count];
 
 /*
  * TODO:
@@ -59,9 +64,26 @@ bool do_exec(int count, ...)
  *
 */
 
-    va_end(args);
+    fflush(stdout);
+    pid = fork();
 
-    return true;
+    if(pid == -1)
+        return false;
+    else if(pid == -1)
+    {
+        if(execv(command[0], command) == -1)
+            exit (EXIT_FAILURE);
+    }
+
+    if(waitpid(pid, &status, 0) == -1)
+        return false;
+    else if(WIFEXITED(status))
+    {
+    va_end(args);
+    return WEXITSTATUS(status);
+    }
+    return false;
+
 }
 
 /**
@@ -75,6 +97,7 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
     va_start(args, count);
     char * command[count+1];
     int i;
+    int fd;
     for(i=0; i<count; i++)
     {
         command[i] = va_arg(args, char *);
@@ -82,7 +105,7 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
     command[count] = NULL;
     // this line is to avoid a compile warning before your implementation is complete
     // and may be removed
-    command[count] = command[count];
+   //command[count] = command[count];
 
 
 /*
@@ -92,8 +115,29 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
  *   The rest of the behaviour is same as do_exec()
  *
 */
+    
+    fd = open(outputfile, O_WRONLY|O_CREAT|O_TRUNC, 0644);
+    if(fd < 0)
+    {
+        perror("open");
+        return false;
+    }
+
+    if(dup2(fd, STDOUT_FILENO) < 0)
+    {
+        perror("dup2");
+        close(fd);
+        return false;
+    }
+
+    if(execv(command[0], command) == -1)
+    {
+        perror("execv");
+        close(fd);
+        exit(EXIT_FAILURE);
+    }
 
     va_end(args);
-
+    close(fd);
     return true;
 }
