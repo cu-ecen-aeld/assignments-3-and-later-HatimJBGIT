@@ -87,7 +87,8 @@ ${CROSS_COMPILE}readelf -a bin/busybox | grep "program interpreter"
 ${CROSS_COMPILE}readelf -a bin/busybox | grep "Shared library"
 
 # TODO: Add library dependencies to rootfs
-LIBC_PATH=/home/hatimjb/course/assignment-2-HatimJBGIT/finder-app/sharedlib
+LIBC_DIR=`dirname $(whereis aarch64-none-linux-gnu-gcc | cut -d " " -f2)`
+LIBC_PATH=${LIBC_DIR}/../aarch64-none-linux-gnu/libc
 cp ${LIBC_PATH}/lib/ld-linux-aarch64.so.1 lib
 cp ${LIBC_PATH}/lib64/libm.so.6 lib64
 cp ${LIBC_PATH}/lib64/libresolv.so.2 lib64
