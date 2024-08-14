@@ -100,20 +100,25 @@ sudo mknod -m 666 dev/null c 1 3
 sudo mknod -m 666 dev/console c 5 1
 
 # TODO: Clean and build the writer utility
-ASSIGN_2_FILES=/home/hatimjb/course/assignment-2-HatimJBGIT/finder-app
 
-cd ${ASSIGN_2_FILES}
-make clean
-make $CROSS_COMPILE=aarch64-none-linux-gnu- all
-cp ${ASSIGN_2_FILES}/writer $OUTDIR/rootfs/home
+
+# Find all directories named "sharedlib" and store them in an array
+directories=($(find / -type d -name "sharedlib" 2>/dev/null))
+
+# Check if the array is not empty
+if [ ${#directories[@]} -gt 0 ]; then
+    # Change to the first directory in the array
+    cd "${directories[0]}"
+    cd ..
+    make clean
+    make CROSS_COMPILE=aarch64-none-linux-gnu- all
+    cp -r -p writer finder.sh conf/username.txt conf/assignment.txt finder-test.sh autorun-qemu.sh ${OUTDIR}/rootfs/home
+else
+    echo "Directory 'sharedlib' not found."
+fi
 
 # TODO: Copy the finder related scripts and executables to the /home directory
 # on the target rootfs
-cp ${ASSIGN_2_FILES}/finder.sh $OUTDIR/rootfs/home
-cp ${ASSIGN_2_FILES}/finder-test.sh $OUTDIR/rootfs/home
-cp ${ASSIGN_2_FILES}/writer.sh $OUTDIR/rootfs/home
-cp -r ${ASSIGN_2_FILES}/conf/ $OUTDIR/rootfs/home
-cp /home/hatimjb/course/assignments-3-and-later-HatimJBGIT/finder-app/autorun-qemu.sh $OUTDIR/rootfs/home
 
 # TODO: Chown the root directory
 
