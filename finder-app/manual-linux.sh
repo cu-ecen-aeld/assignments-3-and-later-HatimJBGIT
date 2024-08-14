@@ -12,6 +12,7 @@ BUSYBOX_VERSION=1_33_1
 FINDER_APP_DIR=$(realpath $(dirname $0))
 ARCH=arm64
 CROSS_COMPILE=aarch64-none-linux-gnu-
+DIR_PATH=`pwd`
 
 if [ $# -lt 1 ]
 then
@@ -101,7 +102,7 @@ sudo mknod -m 666 dev/console c 5 1
 
 # TODO: Clean and build the writer utility
 
-
+<<com
 # Find all directories named "sharedlib" and store them in an array
 directories=($(find / -type d -name "sharedlib" 2>/dev/null))
 
@@ -116,6 +117,12 @@ if [ ${#directories[@]} -gt 0 ]; then
 else
     echo "Directory 'sharedlib' not found."
 fi
+com
+
+cd $DIR_PATH
+cp -r -p writer finder.sh conf/username.txt conf/assignment.txt finder-test.sh autorun-qemu.sh ${OUTDIR}/rootfs/home
+
+
 
 # TODO: Copy the finder related scripts and executables to the /home directory
 # on the target rootfs
