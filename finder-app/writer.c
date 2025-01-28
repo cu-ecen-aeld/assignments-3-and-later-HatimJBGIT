@@ -13,7 +13,7 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    if(NULL == (fp == fopen(argv[1], "w")))
+    if(NULL == (fp = fopen(argv[1], "w")))
     {
         syslog(LOG_ERR, "file cannot be opened.\n");
         closelog();
