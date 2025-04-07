@@ -1,4 +1,4 @@
-*.o
+.o
 writer
 Test_*_Runner.c
 build/
@@ -9,3 +9,7 @@ test.sh.log
 actions-runner/
 #prevent Linux kernel & busybox repositiories from getting re-downloaded
 assignments/assignment3
+aesdsocket
+server/aesdsocket
+server/valgrind-out.txt
+
