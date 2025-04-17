@@ -1,9 +1,9 @@
-CC := $(CROSS_COMPILE)gcc
-#CC := aarch64-none-linux-gnu-gcc
-CFLAGS := -Wall -Wextra -O2 -g
-LDFLAGS := -lpthread
-TARGET := aesdsocket
-OBJS := socket.o
+CC ?= $(CROSS_COMPILE)gcc
+#CC ?= aarch64-none-linux-gnu-gcc
+CFLAGS ?= -Wall -Wextra -O2 -g
+LDFLAGS ?= -lpthread
+TARGET ?= aesdsocket
+OBJS ?= socket.o
 
 all: $(TARGET)
 
