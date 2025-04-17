@@ -1,6 +1,6 @@
 CC ?= $(CROSS_COMPILE)gcc
 #CC ?= aarch64-none-linux-gnu-gcc
-CFLAGS ?= -Wall -Wextra -O2 -g
+CFLAGS ?= -Wall -Wextra -g
 LDFLAGS ?= -lpthread
 TARGET ?= aesdsocket
 OBJS ?= socket.o
